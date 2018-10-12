@@ -1,0 +1,35 @@
+version: '3.2'
+
+services:
+  app:
+    image: nginx:1.13-alpine
+    container_name: web_app
+    ports:
+      - 8001:80/tcp
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./public:/var/www/uw/src/public
+      - ./code:/code
+    networks:
+      - gallery-internal
+      - frontend
+    depends_on:
+      - php
+
+  php:
+    image: bm-php:latest
+    container_name: web_php
+    volumes:
+      - ./public:/var/www/uw/src/public
+      - ./vendor:/var/www/uw/vendor
+      - ./code:/code
+    ports:
+      - 9000
+    networks:
+      - gallery-internal
+      - frontend
+
+networks:
+    gallery-internal:
+      external: true
+    frontend:

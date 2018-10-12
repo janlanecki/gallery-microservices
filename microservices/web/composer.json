@@ -1,0 +1,10 @@
+{
+    "config": {
+        "platform": {
+            "php": "7.0"
+        }
+    },
+    "require": {
+        "php-amqplib/php-amqplib": ">=2.6.1"
+    }
+}

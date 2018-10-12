@@ -1,0 +1,44 @@
+version: '3.2'
+
+services:
+  app:
+    image: nginx:1.13-alpine
+    container_name: storage_app
+    ports:
+      - 8004:80/tcp
+    expose:
+      - "80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./code:/code
+      - ./vendor:/vendor
+    networks:
+      - gallery-internal
+      - storage-1
+    depends_on:
+      - php
+
+  php:
+    image: uw-php
+    container_name: storage_php
+    volumes:
+      - ./vendor:/vendor
+      - ./code:/code
+    ports:
+      - 9000
+    depends_on:
+      - redis
+    networks:
+      - gallery-internal
+      - storage-1
+
+  redis:
+    image: redis:4.0.2
+    container_name: storage_redis
+    networks:
+      - storage-1
+
+networks:
+    gallery-internal:
+      external: true
+    storage-1:
